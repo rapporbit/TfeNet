@@ -28,6 +28,11 @@ from scipy import ndimage
 
 warnings.filterwarnings("ignore")
 
+# Constants
+HU_WINDOW_MIN = -1000.0  # Hounsfield Unit window minimum for lung CT
+HU_WINDOW_MAX = 600.0    # Hounsfield Unit window maximum for lung CT
+PROGRESS_REPORT_INTERVAL = 10  # Report progress every N% of patches
+
 
 def load_itk_image(filename):
     """Load ITK image and return numpy array with origin and spacing"""
@@ -59,7 +64,7 @@ def save_itk(image, origin, spacing, filename):
 def lumTrans_hu(img):
     """Apply Hounsfield Unit window clipping and normalization"""
     img[np.isnan(img)] = -2000
-    lungwin = np.array([-1000., 600.])
+    lungwin = np.array([HU_WINDOW_MIN, HU_WINDOW_MAX])
     newimg = (img - lungwin[0]) / (lungwin[1] - lungwin[0])
     newimg[newimg < 0] = 0
     newimg[newimg > 1] = 1
@@ -143,7 +148,7 @@ def predict_single_case(image_path, model, cube_size=128, step=64, device='cuda'
                     pred_num[:, :, xl:xr, yl:yr, zl:zr] += 1
                     
                     patch_idx += 1
-                    if patch_idx % max(1, total_patches // 10) == 0:
+                    if patch_idx % max(1, total_patches // PROGRESS_REPORT_INTERVAL) == 0:
                         print(f"  Progress: {patch_idx}/{total_patches} patches ({100*patch_idx//total_patches}%)")
     
     # Average predictions and threshold

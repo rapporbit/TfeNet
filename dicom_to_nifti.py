@@ -93,10 +93,18 @@ def load_dicom_manual(dicom_folder):
         slices.sort(key=lambda x: float(x.ImagePositionPatient[2]))
     
     # Calculate slice thickness
+    if len(slices) < 2:
+        raise ValueError(f"Not enough slices to calculate slice thickness: found {len(slices)} slice(s)")
+    
     try:
         slice_thickness = np.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
     except (AttributeError, IndexError):
-        slice_thickness = np.abs(slices[0].SliceLocation - slices[1].SliceLocation)
+        try:
+            slice_thickness = np.abs(slices[0].SliceLocation - slices[1].SliceLocation)
+        except (AttributeError, IndexError):
+            # Fallback to default slice thickness if metadata is missing
+            print("Warning: Could not determine slice thickness from DICOM metadata, using default value of 1.0mm")
+            slice_thickness = 1.0
     
     for s in slices:
         s.SliceThickness = slice_thickness
