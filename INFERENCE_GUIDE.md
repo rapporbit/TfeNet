@@ -22,11 +22,8 @@ conda activate TfeNet
 # 安装 PyTorch (CUDA 12.1)
 pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
 
-# 安装其他依赖
+# 安装其他依赖（包括 pydicom 用于 DICOM 转换）
 pip install -r requirements.txt
-
-# 安装 pydicom (用于 DICOM 转换)
-pip install pydicom
 ```
 
 #### 2. 安装方向感知卷积模块
@@ -237,11 +234,8 @@ conda activate TfeNet
 # Install PyTorch (CUDA 12.1)
 pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
 
-# Install other dependencies
+# Install other dependencies (includes pydicom for DICOM conversion)
 pip install -r requirements.txt
-
-# Install pydicom (for DICOM conversion)
-pip install pydicom
 ```
 
 #### 2. Install Direction-Aware Convolution Modules

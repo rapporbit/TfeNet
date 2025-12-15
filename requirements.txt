@@ -4,3 +4,4 @@ SimpleITK==2.4.0
 scikit-image==0.21.0
 tqdm==4.66.5
 pandas==2.0.3
+pydicom==2.4.4
