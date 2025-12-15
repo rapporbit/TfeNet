@@ -83,9 +83,9 @@ def load_dicom_manual(dicom_folder):
     slices.sort(key=lambda x: float(x.ImagePositionPatient[2]))
     
     # Handle duplicate slice positions
-    if slices[0].ImagePositionPatient[2] == slices[1].ImagePositionPatient[2]:
+    if len(slices) > 1 and slices[0].ImagePositionPatient[2] == slices[1].ImagePositionPatient[2]:
         sec_num = 2
-        while slices[0].ImagePositionPatient[2] == slices[sec_num].ImagePositionPatient[2]:
+        while sec_num < len(slices) and slices[0].ImagePositionPatient[2] == slices[sec_num].ImagePositionPatient[2]:
             sec_num = sec_num + 1
         slice_num = int(len(slices) / sec_num)
         slices.sort(key=lambda x: float(x.InstanceNumber))
@@ -95,7 +95,7 @@ def load_dicom_manual(dicom_folder):
     # Calculate slice thickness
     try:
         slice_thickness = np.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
-    except:
+    except (AttributeError, IndexError):
         slice_thickness = np.abs(slices[0].SliceLocation - slices[1].SliceLocation)
     
     for s in slices:

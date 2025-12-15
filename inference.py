@@ -23,6 +23,8 @@ import SimpleITK as sitk
 from importlib import import_module
 from tqdm import tqdm
 import warnings
+from skimage import measure
+from scipy import ndimage
 
 warnings.filterwarnings("ignore")
 
@@ -155,9 +157,6 @@ def predict_single_case(image_path, model, cube_size=128, step=64, device='cuda'
 
 def postprocess_largest_component(pred):
     """Extract the largest connected component from prediction"""
-    from skimage import measure
-    from scipy import ndimage
-    
     label, num = measure.label(pred, return_num=True, connectivity=1)
     if num == 0:
         return pred
