@@ -10,6 +10,7 @@ conda create --name TfeNet python==3.8
 conda activate TfeNet
 pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
+pip install pydicom  # Required for DICOM conversion
 ```
 
 ## Install DAConv/DSConv
@@ -36,6 +37,34 @@ For more information about DAConv and DSConv , please refer to the following pap
   **Note:** The ATM22 and AIIB23 datasets need to be registered on the challenge website and an application submitted to organizers with official email address. The validation set can be submitted online to obtain the evaluation results, while the test set needs to be submitted to the official party. The test is conducted through Docker and the evaluation feedback is combined. For more information, please visit the challenge website.
 
 
+## Inference on Your Own Data (使用自己的数据进行推理)
+
+### Quick Start for Custom DICOM Data
+
+We provide easy-to-use scripts for performing airway segmentation on your own DICOM CT scans. See [INFERENCE_GUIDE.md](INFERENCE_GUIDE.md) for detailed instructions in both Chinese and English.
+
+**Quick Example:**
+
+```bash
+# Step 1: Convert DICOM to NIfTI
+python dicom_to_nifti.py --input /path/to/dicom/folder --output ./nifti_data
+
+# Step 2: Run segmentation
+python inference.py --input ./nifti_data --output ./results --use-small
+
+# Or use the one-click example script (update paths inside first)
+bash run_inference_example.sh
+```
+
+**Key Features:**
+- ✅ Direct DICOM support with automatic conversion to NIfTI
+- ✅ Simple command-line interface
+- ✅ Support for both main and small airway models
+- ✅ Automatic postprocessing
+- ✅ Bilingual documentation (中文/English)
+
+For complete documentation, see [INFERENCE_GUIDE.md](INFERENCE_GUIDE.md).
+
 ## Predict
 Our trained model can be downloaded from [here](https://drive.google.com/file/d/1DEKyAMhV90AL80qoy2QgDxmO0F1cXx1r/view?usp=drive_link)
 
@@ -56,6 +85,12 @@ checkpoint/
 ```
 
 TfeNet_checkpoint.ckpt and TfeNetSmall_checkpoint.ckpt is the trained model of TfeNet and TfeNetSmall respectively. 
+
+### Method 1: Use the New Simplified Inference Script (Recommended)
+
+See the [Inference on Your Own Data](#inference-on-your-own-data-使用自己的数据进行推理) section above or [INFERENCE_GUIDE.md](INFERENCE_GUIDE.md) for details.
+
+### Method 2: Use the Original Prediction Pipeline
 
 The prediction process is divided into three steps (all case are in .nii.gz or .nii format) :
 1. Perform the prediction to predict the whole airway and the small airway respectively. (You can modify the weights used in evaluation.py)
