@@ -231,7 +231,7 @@ def main():
     # Load model
     print("Loading model...")
     casemodel = import_module('TfeNet')
-    config, case_net = casemodel.get_model()
+    _, case_net = casemodel.get_model()
     
     # Load checkpoint for normal model
     checkpoint_path = os.path.join(args.checkpoint, args.dataset, 'TfeNet_checkpoint.ckpt')
@@ -253,7 +253,7 @@ def main():
             print("Proceeding without small airway model")
             args.use_small = False
         else:
-            small_config, small_net = casemodel.get_model()
+            _, small_net = casemodel.get_model()
             small_checkpoint = torch.load(small_checkpoint_path, map_location=args.device)
             small_net.load_state_dict(small_checkpoint['state_dict'])
             small_net = small_net.to(args.device)
